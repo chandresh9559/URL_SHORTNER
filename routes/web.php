@@ -39,7 +39,10 @@ Route::get('/generate-url', function () {
 })->middleware(['auth', 'role:admin,member,sales,manager'])->name('admin.generateUrl');
 Route::post('/generate-url', [UserController::class, 'generateShortUrl'])->middleware(['auth', 'role:admin,member,sales,manager'])->name('admin.generateShortUrl');
 
-Route::get('/download-url', [UserController::class, 'downloadUrl'])->middleware(['auth', 'role:admin'])->name('admin.downloadUrls');
 
+Route::get('/download-urls', [UserController::class, 'downloadUrls'])->middleware(['auth', 'role:admin,member,sales,manager'])->name('admin.downloadUrls');
+
+Route::get('/short-url/open/{shortCode}', [UserController::class, 'openUrl'])
+    ->middleware('auth')->name('shorturl.open');
 
 require __DIR__.'/auth.php';

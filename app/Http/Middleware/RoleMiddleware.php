@@ -14,23 +14,11 @@ class RoleMiddleware
      *
      * @param  Closure(Request): (Response)  $next
      */
-    public function handle(Request $request, Closure $next, string $roles): Response
+    public function handle(Request $request, Closure $next, string ...$roles): Response
     {
-        $user = Auth::user();
 
-        if (! $user) {
+        if (!in_array(Auth::user()->role, $roles)) {
             return redirect('/');
-        }
-
-        $allowedRoles = collect(explode(',', $roles))
-            ->map(fn ($role) => strtolower(trim($role)))
-            ->filter()
-            ->all();
-
-        $userRole = strtolower((string) $user->role);
-
-        if (! in_array($userRole, $allowedRoles, true)) {
-            return redirect()->route('dashboard');
         }
 
         return $next($request);
